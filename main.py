@@ -4,15 +4,12 @@ from models import *
 
 app = FastAPI()
 
-@app.post("/evaluate")
-def evaluate(request: List[EvalModel]):
-    result = []
-    for eval_model in request:
-        target_audience = eval_model.targetAudience
-        points = eval_model.points
-        result.append({"targetAudience": target_audience, "points": points})
 
-    return result
+@app.post("/evaluate")
+def evaluate(eval_model: EvalModel):
+    target_audience = eval_model.targetAudience
+    points = eval_model.points
+    return EvalModel(targetAudience=target_audience, points=points)
 
 
 @app.post("/best_points")
