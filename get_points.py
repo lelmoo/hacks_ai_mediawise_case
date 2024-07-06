@@ -1,6 +1,6 @@
 import json
 import pandas as pd
-
+from models import *
 
 def rename_name(row):
     gender = ''
@@ -21,10 +21,12 @@ def rename_name(row):
         return f'{gender} {age_from}-{age_to} {income}'
     
 
-def get_points(json_path, data_path):
-    with open(json_path, 'r') as file:
-        json_data = json.load(file)
-
+def get_points(request: BPModel, data_path: str):
+    # Mocking json_data for the example
+    json_data = {
+        "targetAudience": request.targetAudience.model_dump(),
+        "sides": request.sides
+    }
     df = pd.DataFrame([{**json_data['targetAudience'], 'sides': json_data['sides']}])
     df['name'] = df.apply(rename_name, axis=1)
     df.drop(['gender', 'ageFrom', 'ageTo', 'income'], axis=1, inplace=True)
@@ -33,5 +35,3 @@ def get_points(json_path, data_path):
     points = pd.read_csv(data_path)
     out = points[points['name'].isin(df['name'])].nlargest(df['sides'][0], 'value')
     return out.to_json(orient='records', force_ascii=False)
-
-
