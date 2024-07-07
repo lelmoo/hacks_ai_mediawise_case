@@ -27,10 +27,7 @@ def check_point_in_polygon(lat, lon, polygons):
     return None
 
 
-def training(json_path, geojson_path, model_path):
-    with open(json_path, "r") as file:
-        json_data = json.load(file)
-
+def training(json_data, geojson_path, model_path):
     data = pd.DataFrame(
         [{**json_data["targetAudience"], "points": json_data["points"]}]
     )
@@ -53,10 +50,6 @@ def training(json_path, geojson_path, model_path):
 
     loaded_model = pickle.load(open(model_path, "rb"))
     pred = loaded_model.predict(data)[0]
-    print(pred)
     if pred < 0:
         return 0
     return pred
-
-
-training("./mock_points.json", "./moscow.geojson", "./coords_model.cb")
