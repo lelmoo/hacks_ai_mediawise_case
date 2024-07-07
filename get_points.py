@@ -22,7 +22,6 @@ def rename_name(row):
 
 
 def get_points(request: BPModel, data_path: str):
-    # Mocking json_data for the example
     json_data = {
         "targetAudience": request.targetAudience.model_dump(),
         "sides": request.sides,
